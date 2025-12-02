@@ -17,6 +17,7 @@ mongoose
     .catch((err) => console.log(err));
 
 // TODO: Routes
+app.use('/api/auth', require('./routes/auth'))
 
 app.get("/", (req, res) => {
     res.send("KanbanSync API is running");

@@ -18,9 +18,10 @@ mongoose
 
 // TODO: Routes
 app.use('/api/auth', require('./routes/auth'))
+app.use('/api/boards', require('./routes/boards'))
 
 app.get("/", (req, res) => {
-    res.send("KanbanSync API is running");
+    res.send("Kanban-app API is running");
 });
 
 app.listen(PORT, () => {

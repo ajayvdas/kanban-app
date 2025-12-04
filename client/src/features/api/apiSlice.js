@@ -29,7 +29,9 @@ export const apiSlice = createApi({
                 body: credentials,
             }),
         }),
-
+        getUser: builder.query({
+            query: () => '/auth/me'
+        }),
         //Boards
         getBoards: builder.query({
             query: () => "/boards",

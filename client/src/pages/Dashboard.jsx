@@ -1,4 +1,5 @@
 import CreateBoardModal from "@/components/CreateBoardModal";
+import DeleteBoardModal from "@/components/DeleteBoardModal";
 import { Button } from "@/components/ui/button";
 import { useGetBoardsQuery } from "@/features/api/apiSlice";
 import { openModal } from "@/features/ui/uiSlice";
@@ -8,8 +9,13 @@ import { Link } from "react-router-dom";
 
 export default function Dashboard() {
     const { data: boards, isLoading, isError } = useGetBoardsQuery();
-    const { activeModal } = useSelector(state => state.ui)
-    const dispatch = useDispatch()
+    const { activeModal } = useSelector((state) => state.ui);
+    const dispatch = useDispatch();
+
+    const handleDelete = async (e, id) => {
+        e.preventDefault();
+        dispatch(openModal('deleteBoard'))
+    }
 
     if (isLoading) {
         return (
@@ -36,7 +42,7 @@ export default function Dashboard() {
                     <h1 className="text-2xl font-bold">Your Boards</h1>
                     <p className="text-slate-500 mt-1">Manage your project and boards</p>
                 </div>
-                <Button onClick={() => dispatch(openModal('createBoard'))}>
+                <Button onClick={() => dispatch(openModal("createBoard"))}>
                     <Plus size={20} /> New Board
                 </Button>
             </div>
@@ -53,7 +59,11 @@ export default function Dashboard() {
                             <div>
                                 <KanbanSquare size={24} />
                             </div>
-                            <Button variant="ghost" className="opacity-0 group-hover:opacity-100">
+                            <Button
+                                onClick={e => handleDelete(e, board._id)}
+                                variant="ghost"
+                                className="opacity-0 group-hover:opacity-100"
+                            >
                                 <Trash2 size={18} />
                             </Button>
                         </div>
@@ -61,8 +71,8 @@ export default function Dashboard() {
                         <h3 className="text-lg font-bold mb-2">{board.title}</h3>
 
                         <div className="flex items-center gap-2 text-sm text-slate-500">
-                          <Calendar size={14} />
-                          <span>{new Date(board.createdAt).toLocaleDateString()}</span>
+                            <Calendar size={14} />
+                            <span>{new Date(board.createdAt).toLocaleDateString()}</span>
                         </div>
                     </Link>
                 ))}
@@ -85,7 +95,8 @@ export default function Dashboard() {
                 )}
             </div>
 
-            {activeModal === 'createBoard' && <CreateBoardModal />}
+            {activeModal === "createBoard" && <CreateBoardModal />}
+            {activeModal === "deletdBoard" && <DeleteBoardModal />}
         </div>
     );
 }

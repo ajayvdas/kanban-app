@@ -1,21 +1,31 @@
 import CreateBoardModal from "@/components/CreateBoardModal";
-import DeleteBoardModal from "@/components/DeleteBoardModal";
+import ConfirmationModal from "@/components/ConfirmationModal";
 import { Button } from "@/components/ui/button";
-import { useGetBoardsQuery } from "@/features/api/apiSlice";
+import { useDeleteBoardMutation, useGetBoardsQuery } from "@/features/api/apiSlice";
 import { openModal } from "@/features/ui/uiSlice";
 import { Calendar, KanbanSquare, Plus, Trash2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 export default function Dashboard() {
     const { data: boards, isLoading, isError } = useGetBoardsQuery();
+    const [deleteBoard, { isLoading: isDeleting }] = useDeleteBoardMutation();
     const { activeModal } = useSelector((state) => state.ui);
     const dispatch = useDispatch();
+    const [boardToDelete, setBoardToDelete] = useState(null);
 
-    const handleDelete = async (e, id) => {
+    const handleDeleteClick = async (e, id) => {
         e.preventDefault();
-        dispatch(openModal('deleteBoard'))
-    }
+        setBoardToDelete(id);
+    };
+
+    const confirmDelete = async () => {
+        if (boardToDelete) {
+            await deleteBoard(boardToDelete);
+            setBoardToDelete(null);
+        }
+    };
 
     if (isLoading) {
         return (
@@ -60,7 +70,7 @@ export default function Dashboard() {
                                 <KanbanSquare size={24} />
                             </div>
                             <Button
-                                onClick={e => handleDelete(e, board._id)}
+                                onClick={(e) => handleDeleteClick(e, board._id)}
                                 variant="ghost"
                                 className="opacity-0 group-hover:opacity-100"
                             >
@@ -96,7 +106,16 @@ export default function Dashboard() {
             </div>
 
             {activeModal === "createBoard" && <CreateBoardModal />}
-            {activeModal === "deletdBoard" && <DeleteBoardModal />}
+            <ConfirmationModal
+                isOpen={!!boardToDelete}
+                onClose={() => setBoardToDelete(null)}
+                onConfirm={confirmDelete}
+                title="Delete Board"
+                message="Are you sure you want to delete this item?"
+                confirmText="Delete"
+                cancelText="Cancel"
+                isLoading={isDeleting}
+            />
         </div>
     );
 }

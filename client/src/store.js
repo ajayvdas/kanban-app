@@ -9,4 +9,6 @@ export const store = configureStore({
         ui: uiReducer,
         [apiSlice.reducerPath]: apiSlice.reducer,
     },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiSlice.middleware),
+    devTools: true
 })

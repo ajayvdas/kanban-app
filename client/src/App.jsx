@@ -1,12 +1,15 @@
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import BoardView from "./pages/BoardView";
+import { useSelector } from "react-redux";
 
-const PrivateRoute = () => {
-    // TODO: COMPLETE PRIVATE ROUTE
+const PrivateRoute = ({ children }) => {
+    const { isAuthenticated } = useSelector(state => state.auth)
+
+    return isAuthenticated ? children : <Navigate to='/login' />
 };
 
 export default function App() {

@@ -5,14 +5,22 @@ import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import BoardView from "./pages/BoardView";
 import { useSelector } from "react-redux";
+import { useGetUserQuery } from "./features/api/apiSlice";
 
 const PrivateRoute = ({ children }) => {
-    const { isAuthenticated } = useSelector(state => state.auth)
+    const { isAuthenticated } = useSelector((state) => state.auth);
 
-    return isAuthenticated ? children : <Navigate to='/login' />
+    return isAuthenticated ? children : <Navigate to="/login" />;
 };
 
 export default function App() {
+    const { token } = useSelector((state) => state.auth);
+    const { isLoading } = useGetUserQuery(undefined, { skip: !token });
+
+    if (isLoading) {
+        return <div className="flex items-center justify-center h-screen">Loading...</div>;
+    }
+
     return (
         <Router>
             <Routes>
@@ -26,8 +34,8 @@ export default function App() {
                         </PrivateRoute>
                     }
                 >
-                  <Route index element={<Dashboard />} />
-                  <Route path="board/:boardId" element={<BoardView />} />
+                    <Route index element={<Dashboard />} />
+                    <Route path="board/:boardId" element={<BoardView />} />
                 </Route>
             </Routes>
         </Router>

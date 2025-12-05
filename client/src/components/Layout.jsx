@@ -10,7 +10,6 @@ const Layout = () => {
     const location = useLocation();
     const { isSidebarOpen } = useSelector((state) => state.ui);
     const { user } = useSelector((state) => state.auth);
-    console.log("Logged in user is: ", user);
     const handleLogout = () => {
         dispatch(logout());
         navigate("/login");

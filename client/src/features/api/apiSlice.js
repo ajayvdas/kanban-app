@@ -109,5 +109,5 @@ export const {
     useCreateTaskMutation,
     useUpdateTaskMutation,
     useDeleteTaskMutation,
-    use,
+    useGetUserQuery,
 } = apiSlice;

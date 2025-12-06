@@ -16,7 +16,7 @@ mongoose
     .then(() => console.log("MongoDB Connected"))
     .catch((err) => console.log(err));
 
-// TODO: Routes
+
 app.use('/api/auth', require('./routes/auth'))
 app.use('/api/boards', require('./routes/boards'))
 app.use('/api/tasks', require('./routes/tasks'))
